@@ -48,112 +48,13 @@ inicioSuperficie1 = function () {
 	var carro = crearCarro();
  	
 	//cubo para poder ver como apunta mi camara
-	
 	var geometry = new THREE.BoxGeometry( 10, 10, 10 );
 	var material = new THREE.MeshLambertMaterial( { color: 0x00FF00 } );
 	cube = new THREE.Mesh( geometry, material );
 	cube.position.set(100,0,0);
 	scene.add( cube );
 
-	document.addEventListener(
-			'keydown',
-			function( ev ) {
-				switch( ev.keyCode ) {
-					case 49:
-						// Left
-						console.log("espicho 1");
-						camaraActiva = 1;
-	
-						break;
-					case 50:
-						// Left
-						camaraActiva = 2;
-	
-						break;
-					case 51:
-						// Left
-						camaraActiva = 3;
-	
-						break;
-					case 52:
-						// Left
-						camaraActiva = 4;
-	
-						break;					
-					case 37:
-						// Left
-						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: giroTimon, z: 0.1});
-                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: giroTimon, z: 0});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: giroTimon, z: 0.1});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: giroTimon, z: 0});
-						//carro.position.x = 0;
-						
-						break;
-					
-					case 39:
-						// Right
-						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: -giroTimon, z: 0.1});
-                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: -giroTimon, z: 0});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: -giroTimon, z: 0.1});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: -giroTimon, z: 0});
-						
-						break;
-					
-					case 38:
-						// Up
-						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, velocidad, 15000);
-                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, velocidad, 15000);
-	                    carro.ruedaFrontalIzquierdaConstraint.enableAngularMotor(2);
-   	                carro.ruedaFrontalDerechaConstraint.enableAngularMotor(2);
-						break;
-					
-					case 40:
-						// Down
-						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, -velocidad, 15000);
-                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, -velocidad, 15000);
-	             
-						break;
-				}
-			}
-		);
-		
-		document.addEventListener(
-			'keyup',
-			function( ev ) {
-				switch( ev.keyCode ) {
-					case 37:
-						// Left
-						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-						
-						break;
-					
-					case 39:
-						// Right
-						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-						break;
-					
-					case 38:
-						// Up
-						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
-                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
-						
-						break;
-					
-					case 40:
-						// Down
-						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
-                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
-						
-						break;
-				}
-			}
-		);
+	interactuarConTeclado(carro);
 		
 	 klein = function (u, v) {
             u *= Math.PI;
@@ -260,141 +161,111 @@ inicioSuperficie1 = function () {
             return plane;
         }
 
-function crearRueda(position) {
-	var rueda_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({color: 0x444444}),
-			1.0, // high friction
-			.5 // medium restitution
-	);
-	//CylinderGeometry (radio externo, radio interno, grosor, divisiones
-	var rueda_geometria = new THREE.CylinderGeometry(4, 4, 2, 30);
-	var rueda = new Physijs.CylinderMesh(
-			rueda_geometria,
-			rueda_material,
-			100
-	);
 
-	rueda.rotation.x = Math.PI / 2;
-	rueda.castShadow = true;
-	rueda.position.copy(position);
-	return rueda;
-}
-
- function crearCarro() {
-	 
+interactuarConTeclado = function(carro){
+	document.addEventListener(
+			'keydown',
+			function( ev ) {
+				switch( ev.keyCode ) {
+					case 49:
+						// Left
+						console.log("espicho 1");
+						camaraActiva = 1;
 	
+						break;
+					case 50:
+						// Left
+						camaraActiva = 2;
 	
-	var carro = {};
-	var carro_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({color: 0xff4444, opacity: 0.9, transparent: true}),
-			.5, // high friction
-			.5 // medium restitution
-	);
-
-	// crear Todo el carro
+						break;
+					case 51:
+						// Left
+						camaraActiva = 3;
 	
-	var todoElCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(15, 4, 4), carro_material, 500);
-	todoElCarro.position.set(5, 5, 5);
-	todoElCarro.castShadow = true;
-	scene.add(todoElCarro);
+						break;
+					case 52:
+						// Left
+						camaraActiva = 4;
 	
-	var carroArriba_material = new THREE.MeshLambertMaterial({color: 0xff4444, opacity: 0.9, transparent: true});
-	var carroArriba_geometria = new THREE.CubeGeometry( 7, 4, 4);
-	carroArriba = new THREE.Mesh( carroArriba_geometria, carroArriba_material );
-	carroArriba.position.set(-4, 4, 0);
-	todoElCarro.add( carroArriba );	
-	
-	
-	//camara que me muestra el carro desde afuera
-	cameraCarro = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight,1, 1000);
-	cameraCarro.position.set(-40, 15, 0);
-	cameraCarro.lookAt(carroArriba.position);
-	console.log(carroArriba.position);
-	carroArriba.add(cameraCarro);
-	
-	//camara en primera persona
-	cameraPersona = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight,1, 1000);
-	cameraPersona.position.set(3, 0, 0);
-	cameraPersona.rotation.y = -Math.PI/2;
-	
-	//console.log(cameraPersona.position);
-	carroArriba.add(cameraPersona);
-
-	// crear las ruedas ruedas
-	var ruedaFrontalDerecha = crearRueda(new THREE.Vector3(0, 4, 10));
-	var ruedaFrontalIzquierda = crearRueda(new THREE.Vector3(0, 4, 0));
-	var ruedaTraseraDerecha = crearRueda(new THREE.Vector3(10, 4, 10));
-	var ruedaTraseraIzquierda = crearRueda(new THREE.Vector3(10, 4, 0));
-
-	// poner las ruedas en la escena
-	scene.add(ruedaFrontalDerecha);
-	scene.add(ruedaFrontalIzquierda);
-	scene.add(ruedaTraseraDerecha);
-	scene.add(ruedaTraseraIzquierda);
-
-	var ruedaFrontalDerechaConstraint = crearRuedaConstraint(ruedaFrontalDerecha, todoElCarro, new THREE.Vector3(0, 4, 8));
-	scene.addConstraint(ruedaFrontalDerechaConstraint);
-
-	var ruedaFrontalIzquierdaConstraint = crearRuedaConstraint(ruedaFrontalIzquierda, todoElCarro, new THREE.Vector3(0, 4, 2));
-	scene.addConstraint(ruedaFrontalIzquierdaConstraint);
-
-	var ruedaTraseraDerechaConstraint = crearRuedaConstraint(ruedaTraseraDerecha, todoElCarro, new THREE.Vector3(10, 4, 8));
-	scene.addConstraint(ruedaTraseraDerechaConstraint);
-
-	var ruedaTraseraIzquierdaConstraint = crearRuedaConstraint(ruedaTraseraIzquierda, todoElCarro, new THREE.Vector3(10, 4, 2));
-	scene.addConstraint(ruedaTraseraIzquierdaConstraint);
-
-
-	// backwheels don't move themselves and are restriced in their
-	// movement. They should be able to rotate along the z-axis
-	// same here, if the complete angle is allowed set lower higher
-	// than upper.
-	// by setting the lower and upper to the same value you can
-	// fix the position
-	// we can set the x position to 'loosen' the axis for the directional
-	ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-	ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-	ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
-	ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-
-
-	// front wheels should only move along the z axis.
-	// we don't need to specify anything here, since
-	// that value is overridden by the motors
-	ruedaFrontalDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0});
-	ruedaFrontalDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-	ruedaFrontalIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0});
-	ruedaFrontalIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
-
-
-	carro.ruedaFrontalIzquierdaConstraint = ruedaFrontalIzquierdaConstraint;
-	carro.ruedaFrontalDerechaConstraint = ruedaFrontalDerechaConstraint;
-	carro.ruedaTraseraIzquierdaConstraint = ruedaTraseraIzquierdaConstraint;
-	carro.ruedaTraseraDerechaConstraint = ruedaTraseraDerechaConstraint;
-
-	return carro;
-}
-
-function crearRuedaConstraint(rueda, todoElCarro, position) {
-	var constraint = new Physijs.DOFConstraint(
-			rueda, todoElCarro, position);
-
-	return constraint;
-}
+						break;					
+					case 37:
+						// Left
+						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: giroTimon, z: 0.1});
+                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: giroTimon, z: 0});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: giroTimon, z: 0.1});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: giroTimon, z: 0});
+						//carro.position.x = 0;
+						
+						break;
+					
+					case 39:
+						// Right
+						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: -giroTimon, z: 0.1});
+                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: -giroTimon, z: 0});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: -giroTimon, z: 0.1});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: -giroTimon, z: 0});
+						
+						break;
+					
+					case 38:
+						// Up
+						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, velocidad, 15000);
+                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, velocidad, 15000);
+	                    carro.ruedaFrontalIzquierdaConstraint.enableAngularMotor(2);
+   	                carro.ruedaFrontalDerechaConstraint.enableAngularMotor(2);
+						break;
+					
+					case 40:
+						// Down
+						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, -velocidad, 15000);
+                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, -velocidad, 15000);
+	             
+						break;
+				}
+			}
+		);
 		
-
-
-function crearSuperficie() {
-	var superficie_material = Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xaaaaaa}),
-			0.8, // high friction controla que tan rapido peuden moverse los carros (entre más alto el valor, más rapido pueden ir.
-			.4 // low restitution controla que tanto rebota
-	);
-	var superficie = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 1, 200), superficie_material, 0);
-	superficie.receiveShadow = true;
+		document.addEventListener(
+			'keyup',
+			function( ev ) {
+				switch( ev.keyCode ) {
+					case 37:
+						// Left
+						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
+                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
+						
+						break;
+					
+					case 39:
+						// Right
+						carro.ruedaTraseraDerechaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
+                    	carro.ruedaTraseraDerechaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularLowerLimit({x: 0, y: 0, z: 0.1});
+                    	carro.ruedaTraseraIzquierdaConstraint.setAngularUpperLimit({x: 0, y: 0, z: 0});
+						break;
+					
+					case 38:
+						// Up
+						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
+                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
+						
+						break;
+					
+					case 40:
+						// Down
+						carro.ruedaFrontalIzquierdaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
+                    	carro.ruedaFrontalDerechaConstraint.configureAngularMotor(2, 0.1, 0, 0, 15000);
+						
+						break;
+				}
+			}
+		);
 	
-	//superficie.rotation.x = Math.PI/10;
-	scene.add(superficie);
+	
 }
+
 
 render = function () {
 	requestAnimationFrame(render);
