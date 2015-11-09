@@ -1,11 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+</style>
+
 <head>
-<meta charset="UTF-8">
-<title>Untitled Document</title>
+    <title>main</title>
+    <script type="text/javascript" src="js/libs/socket.io-1.3.7.js"></script>
+    <script type="text/javascript" src="js/juego_cliente.js"></script>
+    <script type="text/javascript" src="js/libs/three.min.js"></script>   
+    <script type="text/javascript" src="js/libs/physi.js"></script>
+	<script type="text/javascript" src="js/libs/dat.gui.js"></script>
+    <script type="text/javascript" src="js/libs/perlin.js"></script>
+    <script type="text/javascript" src="js/carro.js"></script>
+    <script type="text/javascript" src="js/setupDeEscena.js"></script>
+    <script type="text/javascript" src="js/cambiarCamara.js"></script>
+    <script type="text/javascript" src="js/interactuarConTeclado.js"></script>     
+	<script type="text/javascript" src="js/crearJuego.js"></script>
 </head>
 
-<body>
-Esta es superficie 3
+<body onload="inicioSuperficie1('terreno3')">
+<div>	<button onclick="joingame()">Join</button>
+   	<button onclick="consultarPuntosTerritorio()">crearTerreno</button></div>
+<div id="viewport"></div>
 </body>
+
 </html>
