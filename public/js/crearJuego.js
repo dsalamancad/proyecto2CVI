@@ -9,14 +9,14 @@ velocidad = -8;
 giroTimon = 0.5;
 
 
-inicioSuperficie1 = function () {
+function inicioSuperficie1(terreno) {
 	setupDeEscena();
 	var carro = crearCarro();
  	interactuarConTeclado(carro);
 	cambiarCamara();
 	var date = new Date();
 	var pn = new Perlin('rnd' + date.getTime());
- 	var map = createHeightMap(pn);
+ 	var map = createHeightMap(pn, terreno);
               
 	//cubo para poder ver como apunta mi camara
 	var geometry = new THREE.BoxGeometry( 10, 10, 10 );
