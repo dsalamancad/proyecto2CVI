@@ -77,8 +77,7 @@ io.on('connection', function(socket) {
 				throw error;
 		
 			var collection = dbTest.collection("puntosTerreno");
-			  	collection.find({"terreno": "terreno1"}).toArray(function(err, docs) {
-			    //console.dir(docs);
+			  	collection.find({"terreno": msg.numTerreno}).toArray(function(err, docs) {
 			    
 			    socket.emit("puntos_terreno", {
 					puntos_terreno : docs,

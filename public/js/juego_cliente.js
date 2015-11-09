@@ -24,10 +24,10 @@ function guardarTerreno(coordenadas){
 }
 
 var callback_terreno;
-function consultarTerreno(numeroTerreno, callback){
+function consultarTerreno(terreno, callback){
 	callback_terreno = callback;
 	socket.emit( "consultar_puntos_terreno", {
-		numTerreno : numeroTerreno
+		numTerreno : terreno
 	});
 }
 

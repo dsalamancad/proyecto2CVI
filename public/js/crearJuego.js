@@ -9,7 +9,7 @@ velocidad = -8;
 giroTimon = 0.5;
 
 
-inicioSuperficie1 = function () {
+inicioSuperficie1 = function (terreno) {
 	
 	console.log("llega aca inicio funcion de spuerficie1");
 	renderer = new THREE.WebGLRenderer({antialias: true});
@@ -96,21 +96,45 @@ inicioSuperficie1 = function () {
 		scene.add( param );*/
 		var date = new Date();
 		var pn = new Perlin('rnd' + date.getTime());
- 		var map = createHeightMap(pn);
+ 		var map = createHeightMap(pn, terreno);
               
 };
 
 
-function createHeightMap(pn) {
+function createHeightMap(pn, terreno) {
 
-	consultarTerreno("terreno1", function(){
-	
-	    var ground_material = Physijs.createMaterial(
-	           new THREE.MeshLambertMaterial( { color: 0x00FF00 }, .3, .8 ));
-	
-	    var ground_geometry = new THREE.PlaneGeometry(500, 500, 100, 100);
+	consultarTerreno(terreno, function(){
 	    
-	    console.log(puntos_terreno.length);
+	    var imagenTextura;
+	    switch(terreno) {
+		    case "terreno1":
+		        imagenTextura = '../assets/skybox/textura001.jpg';
+		        break;
+		    case "terreno2":
+		        imagenTextura = '../assets/skybox/textura002.jpg';
+		        break;
+		    case "terreno3":
+		        imagenTextura = '../assets/skybox/textura003.jpg';
+		        break;
+		    case "terreno4":
+		        imagenTextura = '../assets/skybox/textura004.jpg';
+		        break;
+		    case "terreno5":
+		        imagenTextura = '../assets/skybox/textura005.jpg';
+		        break;            
+		    default:
+		        imagenTextura = '../assets/skybox/textura001.jpg';
+		}
+	    
+		var ground_material = Physijs.createMaterial(
+			new THREE.MeshLambertMaterial({
+			map: THREE.ImageUtils.loadTexture(imagenTextura)
+		}),
+		0.5, // high friction
+		0.8 // low restitution
+		);
+		
+	    var ground_geometry = new THREE.PlaneGeometry(500, 500, 100, 100);
 	    
 	    for (var i = 0; i < ground_geometry.vertices.length; i++) {
 	    	var vertex = ground_geometry.vertices[i];
@@ -121,8 +145,6 @@ function createHeightMap(pn) {
 					break;
 				}
 			}          
-			//var value = pn.noise(vertex.x / 100, vertex.y / 100, 0);
-	        //vertex.z = value * -100;
 	    }
 	    ground_geometry.computeFaceNormals();
 	    ground_geometry.computeVertexNormals();
@@ -294,68 +316,6 @@ render = function () {
 	}
 	scene.simulate(undefined, 1);
 };
-
-//Nuevo Deisy
-
-function crearTerreno(){
-	var numAleatorios = [];
-	var i;
-	for (i = 0; i < 16; i++){
-		numAleatorios[i] = getRandomInt();
-	}
-	
-	var constantesZ=[];
-	var constantesY=[];
-	for(i = 0; i < 5; i++){
-		constantesZ[i] = calcularConstantes(numAleatorios[3*(i+1)-3],numAleatorios[3*(i+1)-2],numAleatorios[3*(i+1)-1],numAleatorios[3*(i+1)]);//z
-		constantesY[i] = calcularConstantes(
-			250-(20*(i+1)-20)*5,
-			250-(20*(i+1)-15)*5,
-			250-(20*(i+1)-5)*5,
-			250-(20*(i+1))*5
-			);//y
-		
-	}
-	
-	var coordenadas = [];
-	for(i = 0; i < 100; i++){//y
-		var t=(i%20)/20;
-		var consY=constantesY[Math.floor(i/20)];
-		var consZ=constantesZ[Math.floor(i/20)];
-		
-		console.log("consZ: "+ JSON.stringify(consZ) + " consY: " + JSON.stringify(consY));
-		
-		//var y = consY.a * t * t * t + consY.b * t * t + consY.c * t + consY.x0;
-		var y = i*5-250;
-		var z = consZ.a * t * t * t + consZ.b * t * t + consZ.c * t + consZ.x0;
-			
-		console.log("z: "+ z + " y ; " + y);	
-		for(j = 0; j < 100; j++){//x
-			var x=j*5-250;
-			coordenadas[i*100 + j] = {x:x, y:y, z:z, t:t, 'terreno':'terreno1'};
-			
-		}
-	}
-	guardarTerreno(coordenadas);
-	
-}
-
-function calcularConstantes(x0,x1,x2,x3){
-	var a=0;
-    var b=0;
-    var c=0;
-    
-    c = 3 * (x1 - x0);
-	b = 3 * (x2 - x1) - c;
-	a = x3 - x0 - c - b;
-	
-	return {a:a, b:b, c:c, x0:x0};
-}
-
-
-function getRandomInt() {
-  return Math.floor(Math.random() * (20 + 30)) -30;
-}		
 
 
 

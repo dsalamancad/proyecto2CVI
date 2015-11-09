@@ -22,7 +22,7 @@ function controlEstado(){
 	else if (estado == 'juego1'){ 
 		console.log("el estado es juego 1");
 		webGLRenderer.clear();
-		inicioSuperficie1();
+		inicioSuperficie1("terreno4");
 	}
 	else if (estado == 'juego2'){ 
 		webGLRenderer.clear();
