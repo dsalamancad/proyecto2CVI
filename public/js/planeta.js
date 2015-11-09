@@ -3,7 +3,7 @@
 function inicioPlaneta() {
    
 		 var projector = new THREE.Projector();
-        document.addEventListener('mousedown', onDocumentMouseDown, false);
+        document.addEventListener('mousedown', seleccionarSuperficie, false);
        	
 		//crear el fondo 
 		var urls = [
@@ -126,7 +126,7 @@ function inicioPlaneta() {
 		var projector = new THREE.Projector();
         
 
-        function onDocumentMouseDown(event) {
+        function seleccionarSuperficie(event) {
 
             var vector = new THREE.Vector3(( event.clientX / window.innerWidth ) * 2 - 1, -( event.clientY / window.innerHeight ) * 2 + 1, 0.5);
             vector = vector.unproject(camera);
@@ -138,24 +138,29 @@ function inicioPlaneta() {
             if (intersects.length > 0) {
 				 
 				if (intersects[0].object.name == "superficie1"){
-					
-					llamarjuego1();
+					window.open("superficie1.html","_self")
+					document.removeEventListener('mousedown', seleccionarSuperficie, false);
+					//llamarjuego1();
 				}
 				else if (intersects[0].object.name == "superficie2"){
-					llamarjuego2();
-					document.removeEventListener('mousedown', onDocumentMouseDown, false);
+					window.open("superficie2.html","_self")
+					document.removeEventListener('mousedown', seleccionarSuperficie, false);
+					//llamarjuego2();
 				}
 				else if (intersects[0].object.name == "superficie3"){
-					llamarjuego1();
-					document.removeEventListener('mousedown', onDocumentMouseDown, false);
+					window.open("superficie3.html","_self")
+					document.removeEventListener('mousedown', seleccionarSuperficie, false);
+					//llamarjuego3();
 				}
 				else if (intersects[0].object.name == "superficie4"){
-					llamarjuego1();
-					document.removeEventListener('mousedown', onDocumentMouseDown, false);
+					window.open("superficie4.html","_self")
+					document.removeEventListener('mousedown', seleccionarSuperficie, false);
+					//llamarjuego4();
 				}
 				else if (intersects[0].object.name == "superficie5"){
-					llamarjuego1();
-					document.removeEventListener('mousedown', onDocumentMouseDown, false);
+					window.open("superficie5.html","_self")
+					document.removeEventListener('mousedown', seleccionarSuperficie, false);
+					//llamarjuego5();
 				}
 				else{
 					console.log("a ninguno");	

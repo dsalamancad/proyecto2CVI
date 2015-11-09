@@ -15,21 +15,20 @@
     <script type="text/javascript" src="js/libs/three.min.js"></script>   
     <script type="text/javascript" src="js/libs/physi.js"></script>
 	<script type="text/javascript" src="js/libs/dat.gui.js"></script>
-    <!--<script type="text/javascript" src="js/libs/perlin.js"></script>
-    <script src="../js/carro.js"></script>
+    <script type="text/javascript" src="js/libs/perlin.js"></script>
+    <script type="text/javascript" src="js/carro.js"></script>
+    <script type="text/javascript" src="js/setupDeEscena.js"></script>
+    <script type="text/javascript" src="js/cambiarCamara.js"></script>
+    <script type="text/javascript" src="js/interactuarConTeclado.js"></script>     
 	<script type="text/javascript" src="js/crearJuego.js"></script>
-    <script type="text/javascript" src="js/prueba.js"></script>
-    <script src="js/libs/RenderManager.js"></script>-->
-    <script type="text/javascript" src="js/libs/OrbitControls.js"></script>
-    <script src="js/libs/Projector.js"></script>
-    <script type="text/javascript" src="js/planeta.js"></script>
-   <script src="js/states.js"></script>
 </head>
 
 <body>
-<div>	
-	<button onclick="joingame()">Join</button>
-   	<button onclick="crearTerreno()">crearTerreno</button></div>
+<script>
+	window.onload = inicioSuperficie1;
+</script>
+<div>	<button onclick="joingame()">Join</button>
+   	<button onclick="consultarPuntosTerritorio()">crearTerreno</button></div>
 <div id="viewport"></div>
 </body>
 
