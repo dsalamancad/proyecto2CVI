@@ -8,7 +8,7 @@
 
 //var renderManager = new THREE.Extras.RenderManager(renderer);
 
-var estado = 'planeta';
+var estado = 'juego1';
 
 // main loop, such as phaser update()
 function controlEstado(){

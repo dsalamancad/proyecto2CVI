@@ -1,6 +1,7 @@
 var socket = io.connect();
 var playerId;
 var players;
+var puntos_terreno;
 
 socket.on("joined", function(msg){
 	playerId = msg.number;
@@ -17,8 +18,20 @@ function joingame(){
 } 
 
 function guardarTerreno(coordenadas){
-	//console.log("llego cliente " + coordenadas[0]);
 	socket.emit( "insertar_puntos_terreno", {
 		puntos : coordenadas
 	});
 }
+
+var callback_terreno;
+function consultarTerreno(numeroTerreno, callback){
+	callback_terreno = callback;
+	socket.emit( "consultar_puntos_terreno", {
+		numTerreno : numeroTerreno
+	});
+}
+
+socket.on("puntos_terreno", function(msg){
+	puntos_terreno = msg.puntos_terreno;
+	callback_terreno();
+});

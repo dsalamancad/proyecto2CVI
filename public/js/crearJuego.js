@@ -96,44 +96,54 @@ inicioSuperficie1 = function () {
 		scene.add( param );*/
 		var date = new Date();
 		var pn = new Perlin('rnd' + date.getTime());
- var map = createHeightMap(pn);
-            scene.add(map);
-
-	requestAnimationFrame(render);
-	
-
-  
+ 		var map = createHeightMap(pn);
+              
 };
 
 
- function createHeightMap(pn) {
+function createHeightMap(pn) {
 
-            var ground_material = Physijs.createMaterial(
-                   new THREE.MeshLambertMaterial( { color: 0x00FF00 }, .3, .8 ));
-
-            var ground_geometry = new THREE.PlaneGeometry(220, 200, 100, 100);
-            for (var i = 0; i < ground_geometry.vertices.length; i++) {
-                var vertex = ground_geometry.vertices[i];
-                var value = pn.noise(vertex.x / 100, vertex.y / 100, 0);
-                vertex.z = value * -100;
-            }
-            ground_geometry.computeFaceNormals();
-            ground_geometry.computeVertexNormals();
-
-            var ground = new Physijs.HeightfieldMesh(
-                    ground_geometry,
-                    ground_material,
-                    0, // mass
-                    100,
-                    100
-            );
-            ground.rotation.x = Math.PI / -2;
-            ground.rotation.y =0;
-			ground.position.y = -6;
-            ground.receiveShadow = true;
-
-            return ground;
-        }
+	consultarTerreno("terreno1", function(){
+	
+	    var ground_material = Physijs.createMaterial(
+	           new THREE.MeshLambertMaterial( { color: 0x00FF00 }, .3, .8 ));
+	
+	    var ground_geometry = new THREE.PlaneGeometry(500, 500, 100, 100);
+	    
+	    console.log(puntos_terreno.length);
+	    
+	    for (var i = 0; i < ground_geometry.vertices.length; i++) {
+	    	var vertex = ground_geometry.vertices[i];
+			
+			for(var j = 0; j < puntos_terreno.length; j++){
+				if(vertex.x == puntos_terreno[j].x && vertex.y == puntos_terreno[j].y){
+					vertex.z = puntos_terreno[j].z;	
+					break;
+				}
+			}          
+			//var value = pn.noise(vertex.x / 100, vertex.y / 100, 0);
+	        //vertex.z = value * -100;
+	    }
+	    ground_geometry.computeFaceNormals();
+	    ground_geometry.computeVertexNormals();
+	
+	    var ground = new Physijs.HeightfieldMesh(
+	            ground_geometry,
+	            ground_material,
+	            0, // mass
+	            100,
+	            100
+	    );
+	    ground.rotation.x = Math.PI / -2;
+	    ground.rotation.y =0;
+		ground.position.y = -6;
+	    ground.receiveShadow = true;
+	
+		scene.add(ground);
+	
+		requestAnimationFrame(render);
+    });
+}
 		
  function createMesh(geom) {
             geom.applyMatrix(new THREE.Matrix4().makeTranslation(-25, 0, -25));
@@ -286,6 +296,7 @@ render = function () {
 };
 
 //Nuevo Deisy
+
 function crearTerreno(){
 	var numAleatorios = [];
 	var i;

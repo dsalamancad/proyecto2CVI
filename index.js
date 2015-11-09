@@ -54,9 +54,7 @@ var dbTest = new mongodb.Db("juegoBD", serverBD, {});
 
 io.on('connection', function(socket) {
 	socket.on('insertar_puntos_terreno', function(msg) {
-		//console.log("llego servidor" + msg.puntos);
-		//insertarTerrenoBD(msg.puntos);
-
+		
 		dbTest.open(function(error, client) {
 			if (error)
 				throw error;
@@ -64,10 +62,28 @@ io.on('connection', function(socket) {
 			dbTest.collection("puntosTerreno").insert(msg.puntos, function(err, records) {
 				if (err)
 					throw err;
-				//console.log("Record added as " + records[0]._id);
 				dbTest.close();
 			});
 			
+		});
+	});
+});
+
+io.on('connection', function(socket) {
+	socket.on('consultar_puntos_terreno', function(msg) {
+		
+		dbTest.open(function(error, client) {
+			if (error)
+				throw error;
+		
+			var collection = dbTest.collection("puntosTerreno");
+			  	collection.find({"terreno": "terreno1"}).toArray(function(err, docs) {
+			    //console.dir(docs);
+			    
+			    socket.emit("puntos_terreno", {
+					puntos_terreno : docs,
+				});
+			  });
 		});
 	});
 });
