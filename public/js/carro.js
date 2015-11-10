@@ -45,6 +45,19 @@ function crearCarro() {
 	var todoElCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(15, 4, 4), carro_material, 500);
 	todoElCarro.position.set(5, 5, 5);
 	todoElCarro.castShadow = true;
+	
+	//crear geometría para definir el lado sensible
+	var ladoSensible_material = Physijs.createMaterial(
+			new THREE.MeshLambertMaterial({color: 0xffff00, opacity: 0.9, transparent: true}),
+			.5, // high friction
+			.5 // medium restitution
+	);
+	var ladoSensible = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 4, 8), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
+	ladoSensible.position.set(9, 0, 0);
+	ladoSensible.name = "ladoSensible_jugador1";
+	todoElCarro.add( ladoSensible );
+	
+	
 	scene.add(todoElCarro);
 	
 	var carroArriba_material = new THREE.MeshLambertMaterial({color: 0xff4444, opacity: 0.9, transparent: true});
@@ -52,6 +65,8 @@ function crearCarro() {
 	carroArriba = new THREE.Mesh( carroArriba_geometria, carroArriba_material );
 	carroArriba.position.set(-4, 4, 0);
 	todoElCarro.add( carroArriba );	
+	
+	
 	
 	
 	//camara que me muestra el carro desde afuera

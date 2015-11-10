@@ -4,12 +4,22 @@ Physijs.scripts.ammo = '../libs/ammo.js';
 
 var render, superficie_material, renderer, scene, superficie, light, camaraActiva, camaraJuego, cameraCarro, cameraPersona, camaraCenital, carro, velocidad, giroTimon;
 
+var mesh;
+
 camaraActiva = 1;
-velocidad = -8;
+velocidad = -15;
 giroTimon = 0.5;
 
 
+var puntajeJugador1=0;
+var puntajeJugador2=0;
+
+
+
 function inicioSuperficie1(terreno) {
+	document.getElementById("puntajeJugador1").innerHTML = puntajeJugador1;
+document.getElementById("puntajeJugador2").innerHTML = puntajeJugador2;
+
 	setupDeEscena();
 	var carro = crearCarro();
  	interactuarConTeclado(carro);
@@ -17,13 +27,27 @@ function inicioSuperficie1(terreno) {
 	var date = new Date();
 	var pn = new Perlin('rnd' + date.getTime());
  	var map = createHeightMap(pn, terreno);
-              
-	//cubo para poder ver como apunta mi camara
-	var geometry = new THREE.BoxGeometry( 10, 10, 10 );
-	var material = new THREE.MeshLambertMaterial( { color: 0x0000FF } );
-	cube = new THREE.Mesh( geometry, material );
-	cube.position.set(100,0,0);
-	scene.add( cube );
+     
+	//cubo de prueba para evaluar la colisión         
+	mesh = new Physijs.BoxMesh(
+		new THREE.BoxGeometry(10, 10, 10),
+		new THREE.MeshLambertMaterial({ color: 0x0000ff })
+	);
+	
+	//funcion para evalaur colision entre el carro y el cubo
+	mesh.addEventListener( 'collision', function(object) {
+		
+		if (object.children[0].name == "ladoSensible_jugador1" ){
+    		puntajeJugador1 ++;
+			document.getElementById("puntajeJugador1").innerHTML = puntajeJugador1;
+			evaluarPuntaje();
+		}
+		else{
+			console.log("nada");
+		}
+  });
+	mesh.position.set(30,0,0);
+	scene.add(mesh);
 };
 
 function createHeightMap(pn, terreno) {
@@ -110,10 +134,41 @@ render = function () {
 	}
 	scene.simulate(undefined, 1);
 };
+
+var puntajeGanador = 5;
 		
+function evaluarPuntaje(){
+	console.log("llamo evalaucion");
+	if (puntajeJugador1>=puntajeGanador || puntajeJugador2>=puntajeGanador ){
+		if (puntajeJugador1 > puntajeJugador2){
+		document.getElementById("jugadorGanador").innerHTML = "jugador 1";
+		}else if (puntajeJugador2 > puntajeJugador1){
+		document.getElementById("jugadorGanador").innerHTML = "jugador 2";	
+		}
+		document.getElementById("gameOver").style.display = "block";
+	}
+	else{}
+	
+	
+}
 
 
+function resetearNivel(){
+	/*document.getElementById("gameOver").style.display = "none";
+	puntajeJugador1 = 0;
+	puntajeJugador2 = 0;*/
+	
+	document.getElementById("puntajeJugador1").innerHTML = puntajeJugador1;
+	document.getElementById("puntajeJugador2").innerHTML = puntajeJugador2;
+	
+	window.location.reload()
+}
 
+function volver(){
+	console.log("volver");
+	 window.history.back();
+	
+}
 
 
 		

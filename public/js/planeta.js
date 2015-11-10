@@ -86,6 +86,7 @@ function inicioPlaneta() {
         camera.lookAt(new THREE.Vector3(00, 0, 0));
 
         var orbitControls = new THREE.OrbitControls(camera);
+		orbitControls.autoRotate = true;
        	var clock = new THREE.Clock();
 
         var ambiLight = new THREE.AmbientLight(0x222222);
