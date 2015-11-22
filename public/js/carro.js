@@ -29,13 +29,11 @@ function crearRueda(position) {
 	return rueda;
 }
 
-function crearCarro() {
+function crearCarro(x,y,z, idJugador) {
 	 
-	
-	
 	var carro = {};
 	var carro_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({color: 0xff4444, opacity: 0.9, transparent: true}),
+			new THREE.MeshLambertMaterial({color: 0xffffff, opacity: 0.9, transparent: true}),
 			.5, // high friction
 			.5 // medium restitution
 	);
@@ -43,21 +41,21 @@ function crearCarro() {
 	// crear Todo el carro
 	
 	var todoElCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(15, 4, 4), carro_material, 500);
-	todoElCarro.position.set(5, 5, 5);
+	todoElCarro.position.set(x, y, z);
 	todoElCarro.castShadow = true;
 	
 	//crear geometría para definir el lado sensible
 	var ladoSensible_material = Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({color: 0xffff00, opacity: 0.9, transparent: true}),
-			.5, // high friction
+			.1, // high friction
 			.5 // medium restitution
 	);
 	var ladoSensible = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 4, 8), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
 	ladoSensible.position.set(9, 0, 0);
-	ladoSensible.name = "ladoSensible_jugador1";
+	ladoSensible.name = "ladoSensible_jugador" + idJugador;
 	todoElCarro.add( ladoSensible );
-	
-	
+	todoElCarro.ladoSensible = ladoSensible;
+	todoElCarro.name = "car";
 	scene.add(todoElCarro);
 	
 	var carroArriba_material = new THREE.MeshLambertMaterial({color: 0xff4444, opacity: 0.9, transparent: true});
@@ -85,27 +83,33 @@ function crearCarro() {
 	carroArriba.add(cameraPersona);
 
 	// crear las ruedas ruedas
-	var ruedaFrontalDerecha = crearRueda(new THREE.Vector3(0, 4, 10));
-	var ruedaFrontalIzquierda = crearRueda(new THREE.Vector3(0, 4, 0));
-	var ruedaTraseraDerecha = crearRueda(new THREE.Vector3(10, 4, 10));
-	var ruedaTraseraIzquierda = crearRueda(new THREE.Vector3(10, 4, 0));
+	var ruedaFrontalDerecha = crearRueda(new THREE.Vector3(x-5, y-1, z+5));
+	var ruedaFrontalIzquierda = crearRueda(new THREE.Vector3(x-5, y-1, z-5));
+	var ruedaTraseraDerecha = crearRueda(new THREE.Vector3(x+5, y-1, z+5));
+	var ruedaTraseraIzquierda = crearRueda(new THREE.Vector3(x+5, y-1, z-5));
 
+	carro.ruedaFrontalDerecha = ruedaFrontalDerecha;
+	carro.ruedaFrontalIzquierda = ruedaFrontalIzquierda;
+	carro.ruedaTraseraDerecha = ruedaTraseraDerecha;
+	carro.ruedaTraseraIzquierda = ruedaTraseraIzquierda;
+	carro.todoElCarro = todoElCarro;
+		
 	// poner las ruedas en la escena
 	scene.add(ruedaFrontalDerecha);
 	scene.add(ruedaFrontalIzquierda);
 	scene.add(ruedaTraseraDerecha);
 	scene.add(ruedaTraseraIzquierda);
-
-	var ruedaFrontalDerechaConstraint = crearRuedaConstraint(ruedaFrontalDerecha, todoElCarro, new THREE.Vector3(0, 4, 8));
+	
+	var ruedaFrontalDerechaConstraint = crearRuedaConstraint(ruedaFrontalDerecha, todoElCarro, new THREE.Vector3(x-5, y-1, z+3));
 	scene.addConstraint(ruedaFrontalDerechaConstraint);
 
-	var ruedaFrontalIzquierdaConstraint = crearRuedaConstraint(ruedaFrontalIzquierda, todoElCarro, new THREE.Vector3(0, 4, 2));
+	var ruedaFrontalIzquierdaConstraint = crearRuedaConstraint(ruedaFrontalIzquierda, todoElCarro, new THREE.Vector3(x-5, y-1, z-3));
 	scene.addConstraint(ruedaFrontalIzquierdaConstraint);
 
-	var ruedaTraseraDerechaConstraint = crearRuedaConstraint(ruedaTraseraDerecha, todoElCarro, new THREE.Vector3(10, 4, 8));
+	var ruedaTraseraDerechaConstraint = crearRuedaConstraint(ruedaTraseraDerecha, todoElCarro, new THREE.Vector3(x+5, y-1, z+3));
 	scene.addConstraint(ruedaTraseraDerechaConstraint);
 
-	var ruedaTraseraIzquierdaConstraint = crearRuedaConstraint(ruedaTraseraIzquierda, todoElCarro, new THREE.Vector3(10, 4, 2));
+	var ruedaTraseraIzquierdaConstraint = crearRuedaConstraint(ruedaTraseraIzquierda, todoElCarro, new THREE.Vector3(x+5, y-1, z-3));
 	scene.addConstraint(ruedaTraseraIzquierdaConstraint);
 
 
